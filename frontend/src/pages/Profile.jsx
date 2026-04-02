@@ -79,7 +79,7 @@ export default function Profile() {
             <div className="form-row">
               <div className="form-group">
                 <label>Name</label>
-                <input name="name" value={form.name} onChange={handleChange} placeholder="Your name" />
+                <input name="name" type="text" value={form.name} onChange={handleChange} placeholder="Your name" />
               </div>
               <div className="form-group">
                 <label>Sex</label>

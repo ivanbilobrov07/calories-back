@@ -56,10 +56,10 @@ export default function MealLog() {
         <div>
           <h1>Meal Log</h1>
           <div className="date-nav">
-            <button onClick={() => goToDate(shiftDate(date, -1))} className="btn-icon">←</button>
+            <button onClick={() => goToDate(shiftDate(date, 0))} className="btn-icon">←</button>
             <span className="text-muted">{displayDate}</span>
             <button
-              onClick={() => goToDate(shiftDate(date, 1))}
+              onClick={() => goToDate(shiftDate(date, 2))}
               className="btn-icon"
               disabled={date >= todayStr()}
             >→</button>
