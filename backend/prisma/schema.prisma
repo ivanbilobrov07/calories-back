@@ -19,11 +19,6 @@ enum Sex {
   female
 }
 
-enum FoodSource {
-  custom
-  openfoodfacts
-}
-
 enum MealType {
   breakfast
   lunch
@@ -57,11 +52,11 @@ model Food {
   proteinPer100g  Float      @map("protein_per_100g")
   fatPer100g      Float      @map("fat_per_100g")
   carbsPer100g    Float      @map("carbs_per_100g")
-  source          FoodSource
   createdByUserId String?    @map("created_by_user_id") @db.Uuid
+  source          String     @default("custom")
   createdAt       DateTime   @default(now()) @map("created_at")
   createdByUser   User?      @relation(fields: [createdByUserId], references: [id])
-  mealLogs        MealLog[]
+  mealLogItems    MealLogItem[]
 
   @@index([name])
   @@index([createdByUserId])
@@ -71,8 +66,6 @@ model Food {
 model MealLog {
   id           String   @id @default(uuid()) @db.Uuid
   userId       String   @map("user_id") @db.Uuid
-  foodId       String   @map("food_id") @db.Uuid
-  quantityG    Float    @map("quantity_g")
   totalKcal    Float    @map("total_kcal")
   totalProtein Float    @map("total_protein")
   totalFat     Float    @map("total_fat")
@@ -82,10 +75,24 @@ model MealLog {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  food         Food     @relation(fields: [foodId], references: [id], onDelete: Restrict)
+  items        MealLogItem[]
 
   @@index([userId])
   @@index([logDate])
   @@index([userId, logDate])
   @@map("meal_logs")
+}
+
+model MealLogItem {
+  id         String   @id @default(uuid()) @db.Uuid
+  mealLogId  String   @map("meal_log_id") @db.Uuid
+  foodId     String   @map("food_id") @db.Uuid
+  quantityG  Float    @map("quantity_g")
+  createdAt  DateTime @default(now()) @map("created_at")
+  mealLog    MealLog  @relation(fields: [mealLogId], references: [id], onDelete: Cascade)
+  food       Food     @relation(fields: [foodId], references: [id], onDelete: Restrict)
+
+  @@index([mealLogId])
+  @@index([foodId])
+  @@map("meal_log_items")
 }
